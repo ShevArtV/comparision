@@ -17,11 +17,11 @@ class Comparision
 
     public function init()
     {
-        if(!$list = $this->data['list']){
+        if (!$list = $this->data['list']) {
             $msg = $this->modx->lexicon('ajaxformitlogin_compare_add_err_list');
             return ['success' => false, 'msg' => $msg];
         };
-        if(!$id = $this->data['id']){
+        if (!$id = $this->data['id']) {
             $msg = $this->modx->lexicon('ajaxformitlogin_compare_add_err_id');
             return ['success' => false, 'msg' => $msg];
         }
@@ -35,19 +35,20 @@ class Comparision
         return array_merge($result, ['success' => true, 'counts' => $this->getCounts()]);
     }
 
-    private function getCounts(){
+    private function getCounts()
+    {
         $result = ['total' => 0];
-        foreach($this->lists as $list => $ids){
+        foreach ($this->lists as $list => $ids) {
             $count = count($ids);
             $result['total'] += $count;
-            if($count){
+            if ($count) {
                 $result[$list] = $count;
-            }else{
+            } else {
                 unset($_SESSION['compare'][$this->ctx][$list]);
             }
 
         }
-        if($result['total'] === 0){
+        if ($result['total'] === 0) {
             unset($_SESSION['compare'][$this->ctx]);
         }
         return $result;

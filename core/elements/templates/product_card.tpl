@@ -9,7 +9,8 @@
 <body>
 {set $rid = $_modx->resource.id}
 {set $parentName = $_modx->resource.parent | resource: 'pagetitle'}
-{'!AjaxFormitLogin' | snippet:['snippet' => 'Comparision',
+{'!AjaxFormitLogin' | snippet:[
+'snippet' => 'Comparision',
 'id' => $rid,
 'list' => $parentName,
 'form' => '@FILE yourfit/chunks/forms/compare_single.tpl',
