@@ -25,7 +25,9 @@ if(!empty($_SESSION['compare'][$ctx])){
                 $resource_data = $product->toArray();
                 if($lang_key){
                     if ($polylangContent = $modx->getObject('PolylangContent', ['content_id' => $id, 'culture_key' => $lang_key])) {
-                        $resource_data = array_merge($resource_data, $polylangContent->toArray());
+                        $polylangData = $polylangContent->toArray();
+                        unset($polylangData['id']);
+                        $resource_data = array_merge($resource_data, $polylangData);
                     }
                     if ($polylangOptions = $modx->getIterator('PolylangProductOption', ['content_id' => $id, 'culture_key' => $lang_key])) {
                         foreach($polylangOptions as $op){
@@ -44,12 +46,7 @@ if(!empty($_SESSION['compare'][$ctx])){
         if($tplNav){
             $nav .= $pdo->parseChunk($tplNav, ['list' => $list, 'idx' => $idx]);
         }
-        if(is_string($fields)){
-            $fields = json_decode($fields,1);
-        }
-        if(empty($fields)){
-            $fields = $pdo->runSnippet('@FILE snippets/snippet.getcomparefields.php', ['categoryName' => $list, 'exclude' => ['offerType'], 'addActions' => isset($scriptProperties['tplActions'])]);
-        }
+        $fields = $pdo->runSnippet('@FILE snippets/snippet.getcomparefields.php', ['categoryName' => $list, 'exclude' => ['offerType']]);
         if(empty($fields)) continue;
         foreach($fields as $field){
             $tpl = 'tpl'.ucfirst($field['key']);
@@ -69,7 +66,7 @@ if(!empty($_SESSION['compare'][$ctx])){
                 $rows .= $pdo->parseChunk($tplRow, ['field' => $field, 'data' => $data]);
             }
         }
-        $modx->log(1, print_r($rows,1));
+
         if($tplContent){
             $content .= $pdo->parseChunk($tplContent, ['list' => $list, 'rows' => $rows, 'idx' => $idx]);
         }
